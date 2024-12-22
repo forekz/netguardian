@@ -1,0 +1,91 @@
+server:
+  host: "0.0.0.0"
+  port: 8080
+  metrics_port: 9090
+  
+database:
+  type: "postgresql"
+  host: "localhost"
+  port: 5432
+  name: "netguardian"
+  user: "netguardian_user"
+  password: "change_me_in_production"
+  
+redis:
+  host: "localhost"
+  port: 6379
+  db: 0
+  
+elasticsearch:
+  hosts: ["http://localhost:9200"]
+  index_prefix: "netguardian"
+  
+kafka:
+  bootstrap_servers: ["localhost:9092"]
+  topics:
+    events: "netguardian_events"
+    metrics: "netguardian_metrics"
+    alerts: "netguardian_alerts"
+    
+security:
+  encryption_key: "generate_strong_key_in_production"
+  ssl:
+    enabled: true
+    cert_file: "certs/server.crt"
+    key_file: "certs/server.key"
+  jwt:
+    secret: "change_this_in_production"
+    expiration: 3600
+    
+monitoring:
+  packet_capture:
+    enabled: true
+    interface: "any"
+    filter: "tcp or udp"
+    buffer_size: 65535
+  system:
+    interval: 5  # seconds
+    enabled_metrics:
+      - cpu
+      - memory
+      - disk
+      - network
+      - processes
+  
+alerts:
+  thresholds:
+    cpu_percent: 90
+    memory_percent: 85
+    disk_percent: 90
+    suspicious_connections: 100
+  notifications:
+    email:
+      enabled: true
+      smtp_server: "smtp.example.com"
+      smtp_port: 587
+      username: "alerts@example.com"
+      password: "change_me"
+      recipients: ["admin@example.com"]
+    slack:
+      enabled: false
+      webhook_url: "https://hooks.slack.com/services/your/webhook/url"
+      
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/netguardian.log"
+  max_size: 10485760  # 10MB
+  backup_count: 5
+  
+web_ui:
+  enabled: true
+  port: 3000
+  session_timeout: 1800
+  cors_origins: ["http://localhost:3000"]
+  
+agents:
+  heartbeat_interval: 30
+  reconnect_attempts: 3
+  reconnect_delay: 5
+  update_check_interval: 3600
+  allowed_versions: ["1.0.*"] 
